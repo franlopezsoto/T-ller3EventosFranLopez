@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/colorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecciona el color de fondo:"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp" />
+
+    <RadioGroup
+        android:id="@+id/colorRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blanco" />
+
+        <RadioButton
+            android:id="@+id/radioGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gris" />
+
+        <RadioButton
+            android:id="@+id/radioCyan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cyan" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/saveColorButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guardar Color"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volver a Inicio"
+        android:layout_marginTop="10dp" />
+</LinearLayout>
