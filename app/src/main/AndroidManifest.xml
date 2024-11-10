@@ -10,8 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Taller3EventosFranLopez"
-        tools:targetApi="31">
+        android:theme="@style/Theme.Taller3EventosFranLopez">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -19,10 +19,16 @@
             android:theme="@style/Theme.Taller3EventosFranLopez">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <!-- Declarar SettingActivity en el manifiesto -->
+        <activity
+            android:name=".SettingActivity"
+            android:exported="true"
+            android:label="Configuración"
+            android:theme="@style/Theme.AppCompat.DayNight" />
+
+    </application>
 </manifest>

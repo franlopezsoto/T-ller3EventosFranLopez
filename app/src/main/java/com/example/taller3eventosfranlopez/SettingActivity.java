@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +21,6 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Aplicar el color de fondo guardado
         sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         int bgColor = sharedPreferences.getInt("bgColor", Color.WHITE);
         getWindow().getDecorView().setBackgroundColor(bgColor);
@@ -32,7 +31,6 @@ public class SettingActivity extends AppCompatActivity {
         saveColorButton = findViewById(R.id.saveColorButton);
         backButton = findViewById(R.id.backButton);
 
-        // Seleccionar el radio button correspondiente al color guardado
         if (bgColor == Color.WHITE) {
             colorRadioGroup.check(R.id.radioWhite);
         } else if (bgColor == Color.LTGRAY) {
@@ -44,32 +42,38 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         saveColorButton.setOnClickListener(v -> {
-            int selectedColor;
-            int selectedId = colorRadioGroup.getCheckedRadioButtonId();
-            if (selectedId == R.id.radioWhite) {
-                selectedColor = Color.WHITE;
-            } else if (selectedId == R.id.radioGray) {
-                selectedColor = Color.LTGRAY;
-            } else if (selectedId == R.id.radioCyan) {
-                selectedColor = Color.CYAN;
-            } else {
-                selectedColor = Color.WHITE;
+            try {
+                int selectedColor;
+                int selectedId = colorRadioGroup.getCheckedRadioButtonId();
+                if (selectedId == R.id.radioWhite) {
+                    selectedColor = Color.WHITE;
+                } else if (selectedId == R.id.radioGray) {
+                    selectedColor = Color.LTGRAY;
+                } else if (selectedId == R.id.radioCyan) {
+                    selectedColor = Color.CYAN;
+                } else {
+                    selectedColor = Color.WHITE;
+                }
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("bgColor", selectedColor);
+                editor.apply();
+
+                getWindow().getDecorView().setBackgroundColor(selectedColor);
+                Toast.makeText(SettingActivity.this, "Color de fondo guardado", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(SettingActivity.this, "Error al guardar el color", Toast.LENGTH_SHORT).show();
             }
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("bgColor", selectedColor);
-            editor.apply();
-
-            // Actualizar el color de fondo
-            getWindow().getDecorView().setBackgroundColor(selectedColor);
         });
 
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(SettingActivity.this, SplashActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            try {
+                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } catch (Exception e) {
+                Toast.makeText(SettingActivity.this, "Error al volver a la pantalla principal", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
-

@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+    <TextView
+        android:id="@+id/greetingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="Saludo"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp"/>
 
     <EditText
         android:id="@+id/nameEditText"

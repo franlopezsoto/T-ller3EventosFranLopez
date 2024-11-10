@@ -14,11 +14,14 @@ import android.app.AlertDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText nameEditText;
     private Button saveSharedPrefsButton;
     private TextView displayNameTextView;
+    private TextView greetingTextView;
     private Button dbButton;
     private Button settingsButton;
 
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Aplicar el color de fondo guardado
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         int bgColor = prefs.getInt("bgColor", getResources().getColor(R.color.white));
@@ -39,12 +43,17 @@ public class MainActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.nameEditText);
         saveSharedPrefsButton = findViewById(R.id.saveSharedPrefsButton);
         displayNameTextView = findViewById(R.id.displayNameTextView);
+        greetingTextView = findViewById(R.id.greetingTextView);
         dbButton = findViewById(R.id.dbButton);
         settingsButton = findViewById(R.id.settingsButton);
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         dbHelper = new DatabaseHelper(this);
         database = dbHelper.getWritableDatabase();
+
+        // Mostrar saludo en el TextView
+        String greeting = getGreetingMessage();
+        greetingTextView.setText(greeting);
 
         // Cargar el nombre guardado en SharedPreferences
         String savedName = sharedPreferences.getString("userName", "No hay nombre guardado");
@@ -63,26 +72,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dbButton.setOnClickListener(v -> showDatabaseOptions());
+        dbButton.setOnClickListener(v -> {
+            saveNameToDatabase();
+            loadNameFromDatabase();
+        });
 
         settingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "Error al abrir la configuración", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void showDatabaseOptions() {
-        final String[] options = {"Guardar Nombre en SQLite", "Cargar Nombre desde SQLite"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Opciones de Base de Datos");
-        builder.setItems(options, (dialog, which) -> {
-            if (which == 0) {
-                saveNameToDatabase();
-            } else if (which == 1) {
-                loadNameFromDatabase();
-            }
-        });
-        builder.show();
+    private String getGreetingMessage() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hour >= 5 && hour < 12) {
+            return "¡Buenos días!";
+        } else if (hour >= 12 && hour < 18) {
+            return "¡Buenas tardes!";
+        } else {
+            return "¡Buenas noches!";
+        }
     }
 
     private void saveNameToDatabase() {
@@ -118,8 +132,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        database.close();
+        if (database != null && database.isOpen()) {
+            database.close();
+        }
         dbHelper.close();
     }
 }
-
